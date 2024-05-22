@@ -8,26 +8,27 @@ import json
 # Získáváme 10 náhodných informací o kočkách z internetu a zapisujeme do souboru. 
 # V případě příliš krátkého času na odezvu vrátí hlášku, aby byl zvýšen časový limit.
 try:
-    response = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=10', timeout=1)
+    response = requests.get('https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=10', timeout=0.001)
     data = response.json()
     with open("fakta_kocky.json", mode="w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
-except requests.exceptions.RequestException:
-    data = [{"text":"Data nebyla zapsána, byl příliš krátký čas pro odezvu."}]
-    print("Jste příliš nedočkaví! Zkuste zvýšit časový limit.")
 
 # Ze souboru získáme pouze požadivaná fakta - hodnoty pro klíč "text" a zapíšeme je do seznamu.
-seznam_faktu = []
-for slovnik in data:
-    seznam_faktu.append(slovnik["text"])
-with open("fakta_kocky_10.json", mode = "w", encoding = "utf-8") as file:
-    json.dump(seznam_faktu, file, indent=4)
+    seznam_faktu = []
+    for slovnik in data:
+        seznam_faktu.append(slovnik["text"])
+    with open("fakta_kocky_10.json", mode = "w", encoding = "utf-8") as file:
+        json.dump(seznam_faktu, file, indent=4)
 
 # Seznam očíslujeme.
-ocislovany_seznam = [f"{i+1}. {text}" for i, text in enumerate(seznam_faktu)]
+    ocislovany_seznam = [f"{i+1}. {text}" for i, text in enumerate(seznam_faktu)]
 
 # Zapíšeme očíslovaný seznam do souboru
-with open("kocici_fakta.json", mode = "w", encoding = "utf-8") as file:
-    json.dump(ocislovany_seznam, file, indent=4)
+    with open("kocici_fakta.json", mode = "w", encoding = "utf-8") as file:
+        json.dump(ocislovany_seznam, file, indent=4)
 
-print(ocislovany_seznam)
+    print(ocislovany_seznam)
+
+# Program upozorní, pokud čas pro odezvu serveru je příliš krátký.
+except requests.exceptions.RequestException:
+    print("Jste příliš nedočkaví! Zkuste zvýšit časový limit.")
